@@ -1,0 +1,10 @@
+
+.DS_Store
+.Rproj.user
+README.html
+README.Rmd
+.RData
+.Rhistory
+_cache/
+solution_.R
+marking/

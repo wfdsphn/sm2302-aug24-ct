@@ -1,0 +1,88 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Part 1 Check output
+      id: part-1-check-output
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Part 1 Check output
+        setup-command: sudo apt-get update; sudo apt-get install -y r-base-core r-cran-tidyverse
+          r-cran-testthat; sudo Rscript -e 'install.packages("TSP")'
+        command: Rscript -e 'library(testthat); suppressPackageStartupMessages(source("solution.R"));
+          test_file("tests/testthat/test-1) Check output.R", reporter = ProgressReporter,
+          stop_on_failure = TRUE)'
+        timeout: 3
+        max-score: 5
+    - name: PART 1 Input validation
+      id: part-1-input-validation
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: PART 1 Input validation
+        setup-command: ''
+        command: Rscript -e 'library(testthat); suppressPackageStartupMessages(source("solution.R")); test_file("tests/testthat/test-2)
+          Input validation.R", reporter = ProgressReporter, stop_on_failure = TRUE)'
+        timeout: 3
+        max-score: 5
+    - name: PART 1 Edge cases
+      id: part-1-edge-cases
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: PART 1 Edge cases
+        setup-command: ''
+        command: Rscript -e 'library(testthat); suppressPackageStartupMessages(source("solution.R")); test_file("tests/testthat/test-3)
+          Edge cases.R", reporter = ProgressReporter, stop_on_failure = TRUE)'
+        timeout: 3
+        max-score: 5
+    - name: PART 2 Top players
+      id: part-2-top-players
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: PART 2 Top players
+        setup-command: ''
+        command: Rscript -e 'library(testthat); suppressPackageStartupMessages(source("solution.R")); test_file("tests/testthat/test-4)
+          Top players.R", reporter = ProgressReporter, stop_on_failure = TRUE)'
+        timeout: 3
+        max-score: 4
+    - name: PART 2 Avg min by position
+      id: part-2-avg-min-by-position
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: PART 2 Avg min by position
+        setup-command: ''
+        command: Rscript -e 'library(testthat); suppressPackageStartupMessages(source("solution.R")); test_file("tests/testthat/test-5)
+          Avg min by pos.R", reporter = ProgressReporter, stop_on_failure = TRUE)'
+        timeout: 3
+        max-score: 3
+    - name: PART 2 High efficiency
+      id: part-2-high-efficiency
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: PART 2 High efficiency
+        setup-command: ''
+        command: Rscript -e 'library(testthat); suppressPackageStartupMessages(source("solution.R")); test_file("tests/testthat/test-6)
+          High efficiency.R", reporter = ProgressReporter, stop_on_failure = TRUE)'
+        timeout: 3
+        max-score: 3
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        PART-1-CHECK-OUTPUT_RESULTS: "${{steps.part-1-check-output.outputs.result}}"
+        PART-1-INPUT-VALIDATION_RESULTS: "${{steps.part-1-input-validation.outputs.result}}"
+        PART-1-EDGE-CASES_RESULTS: "${{steps.part-1-edge-cases.outputs.result}}"
+        PART-2-TOP-PLAYERS_RESULTS: "${{steps.part-2-top-players.outputs.result}}"
+        PART-2-AVG-MIN-BY-POSITION_RESULTS: "${{steps.part-2-avg-min-by-position.outputs.result}}"
+        PART-2-HIGH-EFFICIENCY_RESULTS: "${{steps.part-2-high-efficiency.outputs.result}}"
+      with:
+        runners: part-1-check-output,part-1-input-validation,part-1-edge-cases,part-2-top-players,part-2-avg-min-by-position,part-2-high-efficiency
