@@ -36,7 +36,6 @@ sim_proj <- function(u, theta, h, n) {
 sim_proj(10, 30, 0, 10)
 
 ## ---- Part 2 -----------------------------------------------------------------
-library(dplyr)
 nba_stats <- read.csv("NBA Stats 202324 All Stats  NBA Player Props Tool (4).csv")
 
 top_players <- nba_stats|>
